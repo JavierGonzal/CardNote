@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CardNote</string>
+
+    <string name="retry">Retry</string>
+    <string name="error_server">There are some problems to bring the data</string>
+
+    <string name="no_found">No found</string>
+
 </resources>
