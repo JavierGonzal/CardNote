@@ -3,35 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_note_item_constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground">
 
-    <TextView
-        android:id="@+id/card_note_item_title_textView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/title_item_margin"
-        android:layout_marginEnd="@dimen/title_item_margin"
-        android:layout_marginStart="@dimen/title_item_margin"
-        android:ellipsize="end"
-        android:gravity="start"
-        android:maxLines="1"
-        android:textAlignment="gravity"
-        android:textColor="@color/colorTitle"
-        android:textSize="@dimen/title_text_size"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/card_note_item_description_textView"
-        app:layout_constraintStart_toEndOf="@+id/card_note_item_imageView"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/card_note_item_description_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/item_margin"
         android:layout_marginEnd="@dimen/item_margin"
-        android:layout_marginStart="@dimen/item_margin"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/item_margin"
+        android:text="descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/card_note_item_imageView"
@@ -47,6 +31,25 @@
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/card_note_item_title_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/title_item_margin"
+        android:layout_marginTop="@dimen/title_item_margin"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        android:text="hola description"
+        android:textAlignment="gravity"
+        android:textColor="@color/colorTitle"
+        android:textSize="@dimen/title_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/card_note_item_imageView"
         app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
