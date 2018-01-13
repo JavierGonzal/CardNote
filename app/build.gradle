@@ -82,6 +82,9 @@ dependencies {
     // Mockito
     testCompile "org.mockito:mockito-core:$rootProject.mockito"
 
+    //Glide
+    compile "com.github.bumptech.glide:glide:$rootProject.glide"
+
     // AssertJ
     testCompile "org.assertj:assertj-core:$rootProject.assertj"
 

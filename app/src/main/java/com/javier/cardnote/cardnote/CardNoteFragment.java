@@ -1,5 +1,6 @@
 package com.javier.cardnote.cardnote;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.javier.cardnote.R;
 import com.javier.cardnote.data.Example;
+import com.javier.cardnote.utils.InteractionListener;
 
 import java.util.List;
 
@@ -45,6 +47,8 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
     CardNoteContract.Presenter presenter;
 
     List<Example> exampleList;
+
+    InteractionListener listener;
 
     public CardNoteFragment() {
         // Required empty public constructor
@@ -104,14 +108,15 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
 
     @Override
     public void onItemClick(int position) {
+        listener.onFragmentInteraction(exampleList.get(position).getImage());
     }
 
-    /**@Override
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof InteractionListener) {
             //init the listener
-            mListener = (InteractionListener) context;
+            listener = (InteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement InteractionListener");
@@ -121,9 +126,9 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
-     **/
+
 
     @Override
     public void onPause() {
@@ -136,5 +141,6 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
         setLoadingIndicator(false);
         presenter.fetch();
     }
+
 
 }

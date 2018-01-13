@@ -6,4 +6,7 @@
     <dimen name="item_margin">8dp</dimen>
     <dimen name="title_item_margin">24dp</dimen>
     <dimen name="circle_item_size">90dp</dimen>
+
+    <dimen name="album_art_small">100dp</dimen>
+    <dimen name="margin_medium">5dp</dimen>
 </resources>

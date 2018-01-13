@@ -11,9 +11,11 @@ import java.util.List;
  */
 
 public interface CardNoteContract {
+
     interface Presenter extends BasePresenter {
+
+        void unSubscribe();
         void fetch();
-        //void onClickItem(com.thedeveloperworldisyours.weather10.data.model.List list, String noFound);
     }
 
     interface View extends BaseView<Presenter> {

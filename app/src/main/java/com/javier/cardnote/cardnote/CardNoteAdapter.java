@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.javier.cardnote.R;
 import com.javier.cardnote.data.Example;
 
@@ -78,7 +80,7 @@ public class CardNoteAdapter extends RecyclerView
 
         holder.name.setText(result.get(position).getTitle());
         holder.description.setText(String.valueOf(result.get(position).getDescription()));
-        //holder.imageView.setImageDrawable(result.get(position).getWeather().get(FIRST_POSITION).getMain(), context));
+        Glide.with(context).load(result.get(position).getImage()).apply(RequestOptions.circleCropTransform()).into(holder.imageView);
 
     }
 

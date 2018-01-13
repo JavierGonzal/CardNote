@@ -46,4 +46,5 @@ ext {
     assertj = '2.7.0'
     constraint = '1.0.2'
     circle = '2.2.0'
+    glide = '4.0.0'
 }
