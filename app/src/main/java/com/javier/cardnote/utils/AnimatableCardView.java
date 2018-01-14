@@ -36,13 +36,10 @@ public class AnimatableCardView extends CardView {
 
         if (((ViewGroup) getParent()).getWidth() == 0) {
             if (preDrawListener == null) {
-                preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
+                preDrawListener = () -> {
                         getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
                         setXFraction(xFraction);
                         return true;
-                    }
                 };
                 getViewTreeObserver().addOnPreDrawListener(preDrawListener);
             }
@@ -62,13 +59,10 @@ public class AnimatableCardView extends CardView {
 
         if (((ViewGroup) getParent()).getHeight() == 0) {
             if (preDrawListener == null) {
-                preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
+                preDrawListener = () -> {
                         getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
                         setYFraction(yFraction);
                         return true;
-                    }
                 };
                 getViewTreeObserver().addOnPreDrawListener(preDrawListener);
             }

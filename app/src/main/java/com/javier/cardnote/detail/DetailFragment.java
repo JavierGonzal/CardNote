@@ -8,30 +8,31 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.javier.cardnote.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by javiergonzalezcabezas on 13/1/18.
  */
 
-public class DetailFragment extends Fragment implements DetailContract.View {
+public class DetailFragment extends Fragment implements DetailContract.View, View.OnTouchListener {
 
 
     GradientDrawable gradientDrawable;
 
     DetailContract.Presenter presenter;
 
-    public static int corner = 195;
-    public static int margin = 0;
+    private int xDelta;
 
     public static String color = "#7D9067";
 
@@ -40,7 +41,12 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     @BindView(R.id.detail_imageView)
     ImageView imageView;
-    boolean isCircle;
+
+    @BindView(R.id.detail_imageButton)
+    ImageButton imageButton;
+
+    @BindView(R.id.detail_relativeLayout)
+    ViewGroup root;
 
     public static DetailFragment newInstance() {
         return new DetailFragment();
@@ -61,22 +67,48 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
 
         gradientDrawable = new GradientDrawable();
-        gradientDrawable.setCornerRadius(30.0f);
+        gradientDrawable.setCornerRadius(0.0f);
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
         parent.setBackground(gradientDrawable);
+        imageButton.setOnTouchListener(this);
+
 
         return view;
     }
 
-    @OnClick(R.id.detail_imageView)
-    void change(){
-        if (isCircle) {
-            makeSquare();
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        final int x = (int) event.getRawX();
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) imageButton.getLayoutParams();
+                xDelta = x - lParams.leftMargin;
+                break;
+            case MotionEvent.ACTION_UP:
+                changeAnimation(x);
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_POINTER_UP:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageButton.getLayoutParams();
+                layoutParams.leftMargin = x - xDelta;
+                imageButton.setLayoutParams(layoutParams);
+                break;
         }
-        else {
+        root.invalidate();
+        return true;
+    }
+
+    void changeAnimation(int x) {
+
+        if (x > 200) {
             makeCircle();
+        } else if (150 < x && x < 200) {
+            makeCorner();
+        //} else if (150 > xDelta) {
+          //  makeSquare();
         }
-        isCircle = !isCircle;
     }
 
     @Override
@@ -89,30 +121,33 @@ public class DetailFragment extends Fragment implements DetailContract.View {
         Glide.with(this).load(string).into(imageView);
     }
 
-
     private void makeCircle() {
         ObjectAnimator cornerAnimation =
                 ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 30f, 200.0f);
 
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
-        shiftAnimation.setTarget(parent);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(500);
+        animatorSet.play(cornerAnimation);
+        animatorSet.start();
+    }
+    private void makeSquare() {
+        ObjectAnimator cornerAnimation =
+                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 0f, 0f);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(500);
-        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.play(cornerAnimation);
         animatorSet.start();
     }
 
-    private void makeSquare() {
+    private void makeCorner() {
         ObjectAnimator cornerAnimation =
                 ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 200.0f, 30f);
 
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
-        shiftAnimation.setTarget(parent);
-
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(500);
-        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.play(cornerAnimation);
         animatorSet.start();
     }
+
 }
