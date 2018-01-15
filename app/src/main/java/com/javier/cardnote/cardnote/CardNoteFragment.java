@@ -14,9 +14,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.javier.cardnote.R;
+import com.javier.cardnote.data.Event;
 import com.javier.cardnote.data.Example;
+import com.javier.cardnote.utils.GetListListener;
 import com.javier.cardnote.utils.InteractionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,12 +27,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
+import static com.javier.cardnote.utils.Constants.RESTORE_LIST;
 
 /**
  * Created by javiergonzalezcabezas on 11/1/18.
  */
 
-public class CardNoteFragment extends Fragment implements CardNoteContract.View,CardNoteAdapter.ClickListener {
+public class CardNoteFragment extends Fragment implements CardNoteContract.View, CardNoteAdapter.ClickListener {
+
     @BindView(R.id.card_note_fragment_progress)
     ProgressBar progressBar;
 
@@ -46,9 +51,10 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
 
     CardNoteContract.Presenter presenter;
 
-    List<Example> exampleList;
+    ArrayList<Event> events;
 
     InteractionListener listener;
+    GetListListener getListListener;
 
     public CardNoteFragment() {
         // Required empty public constructor
@@ -61,6 +67,17 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            events = savedInstanceState.getParcelableArrayList(RESTORE_LIST);
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(RESTORE_LIST, events);
     }
 
     @Override
@@ -69,22 +86,39 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.card_note_fragment, container, false);
         ButterKnife.bind(this, view);
-        presenter.subscribe();
+        if (events == null) {
+            if (presenter!=null){
+                presenter.subscribe();
+            }
+        } else {
+            showCardNote(events);
+            setLoadingIndicator(false);
+        }
         return view;
     }
+
     @Override
     public void setPresenter(CardNoteContract.Presenter presenter) {
         this.presenter = presenter;
 
     }
 
+    public void initList(ArrayList<Event> result) {
+        events = result;
+    }
+
     @Override
-    public void showCardNote(List<Example> listElements) {
-        exampleList = listElements;
+    public void convertToEvent(List<Example> examples) {
+        presenter.convertToEvent(examples, getActivity().getResources().getString(R.string.no_found));
+    }
+
+    @Override
+    public void showCardNote(List<Event> events) {
+        this.events = new ArrayList<>(events);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new CardNoteAdapter(getActivity(), listElements);
+        adapter = new CardNoteAdapter(getActivity(), events);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
 
@@ -107,8 +141,14 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
     }
 
     @Override
+    public void takeEvent(List<Event> events) {
+
+        getListListener.getList(events);
+    }
+
+    @Override
     public void onItemClick(int position) {
-        listener.onFragmentInteraction(exampleList.get(position).getImage());
+        listener.onFragmentInteraction(events.get(position).getImage());
     }
 
     @Override
@@ -117,6 +157,7 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
         if (context instanceof InteractionListener) {
             //init the listener
             listener = (InteractionListener) context;
+            getListListener = (GetListListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement InteractionListener");
@@ -127,20 +168,23 @@ public class CardNoteFragment extends Fragment implements CardNoteContract.View,
     public void onDetach() {
         super.onDetach();
         listener = null;
+        getListListener = null;
     }
-
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unSubscribe();
+        if (presenter != null) {
+            presenter.unSubscribe();
+        }
     }
 
     @OnClick(R.id.card_note_fragment_retry_button)
-    public void onClick(){
+    public void onClick() {
         setLoadingIndicator(false);
-        presenter.fetch();
+        if (presenter != null) {
+            presenter.fetch();
+        }
     }
-
 
 }

@@ -21,12 +21,20 @@
         app:layout_constraintStart_toEndOf="@+id/card_note_item_imageView"
         app:layout_constraintTop_toBottomOf="@+id/card_note_item_title_textView" />
 
+    <ProgressBar
+        android:id="@+id/card_note_grid_item_progress"
+        android:layout_width="@dimen/circle_item_size"
+        android:layout_height="@dimen/circle_item_size"
+        android:layout_marginStart="@dimen/item_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/card_note_item_imageView"
         android:layout_width="@dimen/circle_item_size"
         android:layout_height="@dimen/circle_item_size"
         android:layout_marginStart="@dimen/item_margin"
-        android:background="@drawable/circle"
         app:civ_border_color="@color/colorTitle"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"

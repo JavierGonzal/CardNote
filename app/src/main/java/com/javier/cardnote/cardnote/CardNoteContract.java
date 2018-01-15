@@ -1,5 +1,6 @@
 package com.javier.cardnote.cardnote;
 
+import com.javier.cardnote.data.Event;
 import com.javier.cardnote.data.Example;
 import com.javier.cardnote.utils.BasePresenter;
 import com.javier.cardnote.utils.BaseView;
@@ -16,14 +17,19 @@ public interface CardNoteContract {
 
         void unSubscribe();
         void fetch();
+        void convertToEvent(List<Example> examples, String noFound);
     }
 
     interface View extends BaseView<Presenter> {
-        void showCardNote(List<Example> listElements);
+
+        void convertToEvent(List<Example> examples);
+        void showCardNote(List<Event> listElements);
 
         void showError();
 
         void setLoadingIndicator(boolean active);
+
+        void takeEvent(List<Event> events);
 
     }
 }

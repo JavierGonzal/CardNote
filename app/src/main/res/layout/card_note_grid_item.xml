@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_note_grid_item_constraintLayout"
+    android:layout_width="120dp"
+    android:layout_height="150dp"
+    android:layout_margin="5dp">
+
+    <ProgressBar
+        android:id="@+id/card_note_grid_item_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/card_note_grid_item_imageView"
+        app:layout_constraintEnd_toEndOf="@+id/card_note_grid_item_imageView"
+        app:layout_constraintStart_toStartOf="@+id/card_note_grid_item_imageView"
+        app:layout_constraintTop_toTopOf="@+id/card_note_grid_item_imageView" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/card_note_grid_item_imageView"
+        android:layout_width="@dimen/circle_item_size"
+        android:layout_height="@dimen/circle_item_size"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:maxLines="1"
+        app:civ_border_color="@color/colorTitle"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/card_note_grid_item_name_textView"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_margin="2dp"
+        android:ellipsize="end"
+        android:textAlignment="gravity"
+        android:textColor="@color/colorTitle"
+        android:textSize="@dimen/title_text_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

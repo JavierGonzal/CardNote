@@ -20,30 +20,26 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by javiergonzalezcabezas on 11/1/18.
+ * Created by javiergonzalezcabezas on 15/1/18.
  */
 
-public class CardNoteAdapter extends RecyclerView
-        .Adapter<CardNoteAdapter
+public class CardNoteGridAdapter extends RecyclerView
+        .Adapter<CardNoteGridAdapter
         .DataObjectHolder> {
-
     private Context context;
     private List<Event> result;
-    private static CardNoteAdapter.ClickListener clickListener;
+    private static CardNoteGridAdapter.ClickListener clickListener;
 
     static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
             .OnClickListener {
-        @BindView(R.id.card_note_item_title_textView)
+        @BindView(R.id.card_note_grid_item_name_textView)
         TextView name;
 
-        @BindView(R.id.card_note_item_imageView)
+        @BindView(R.id.card_note_grid_item_imageView)
         CircleImageView imageView;
 
-        @BindView(R.id.card_note_item_description_textView)
-        TextView description;
-
-        @BindView(R.id.card_note_item_constraintLayout)
+        @BindView(R.id.card_note_grid_item_constraintLayout)
         ConstraintLayout constraintLayout;
 
         DataObjectHolder(View itemView) {
@@ -57,29 +53,28 @@ public class CardNoteAdapter extends RecyclerView
             clickListener.onItemClick(getAdapterPosition());
         }
     }
-    public void setOnItemClickListener(CardNoteAdapter.ClickListener myClickListener) {
+    public void setOnItemClickListener(CardNoteGridAdapter.ClickListener myClickListener) {
         this.clickListener = myClickListener;
     }
 
-    public CardNoteAdapter(Context context, List<Event> example) {
+    public CardNoteGridAdapter(Context context, List<Event> example) {
         this.context = context;
         result = example;
     }
 
     @Override
-    public CardNoteAdapter.DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CardNoteGridAdapter.DataObjectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_note_item, parent, false);
+                .inflate(R.layout.card_note_grid_item, parent, false);
 
-        CardNoteAdapter.DataObjectHolder dataObjectHolder = new CardNoteAdapter.DataObjectHolder(view);
+        CardNoteGridAdapter.DataObjectHolder dataObjectHolder = new CardNoteGridAdapter.DataObjectHolder(view);
         return dataObjectHolder;
     }
 
     @Override
-    public void onBindViewHolder(CardNoteAdapter.DataObjectHolder holder, int position) {
+    public void onBindViewHolder(CardNoteGridAdapter.DataObjectHolder holder, int position) {
 
         holder.name.setText(result.get(position).getTitle());
-        holder.description.setText(String.valueOf(result.get(position).getDescription()));
         Glide.with(context).load(result.get(position).getImage()).apply(RequestOptions.circleCropTransform()).into(holder.imageView);
 
     }
@@ -93,4 +88,3 @@ public class CardNoteAdapter extends RecyclerView
         void onItemClick(int position);
     }
 }
-

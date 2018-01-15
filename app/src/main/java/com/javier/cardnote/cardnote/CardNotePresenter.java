@@ -2,16 +2,19 @@ package com.javier.cardnote.cardnote;
 
 import android.support.annotation.NonNull;
 
+import com.javier.cardnote.data.Event;
 import com.javier.cardnote.data.Example;
 import com.javier.cardnote.data.RemoteDataSource;
 import com.javier.cardnote.utils.scheduler.BaseSchedulerProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.javier.cardnote.data.CreateEvents.getEvents;
 
 /**
  * Created by javiergonzalezcabezas on 11/1/18.
@@ -58,10 +61,8 @@ public class CardNotePresenter implements CardNoteContract.Presenter {
         Subscription subscription = remoteDataSource.getCardNoteRx()
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
-                .subscribe((List<Example> example) -> {
-                            view.setLoadingIndicator(false);
-                            view.showCardNote(example);
-                        },
+                .subscribe((List<Example> example) ->
+                                view.convertToEvent(example),
                         (Throwable error) -> {
                             try {
                                 view.showError();
@@ -75,4 +76,13 @@ public class CardNotePresenter implements CardNoteContract.Presenter {
 
         this.subscription.add(subscription);
     }
+
+    @Override
+    public void convertToEvent(List<Example> examples, String noFound) {
+        List<Event> events = getEvents(examples, noFound);
+        view.setLoadingIndicator(false);
+        view.showCardNote(events);
+        view.takeEvent(events);
+    }
+
 }
