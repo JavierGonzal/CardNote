@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.javier.cardnote.cardnote.CardNoteGridFragment.newInstance;
 import static com.javier.cardnote.utils.Constants.IMAGE_ITEM;
 import static com.javier.cardnote.utils.Constants.RESTORE_LIST;
 import static com.javier.cardnote.utils.Utils.addFragmentToActivity;
@@ -40,7 +41,6 @@ public class CardNoteActivity extends AppCompatActivity implements InteractionLi
 
     CardNoteFragment cardNoteFragment;
     CardNoteGridFragment gridFragment;
-    Fragment fragment;
     ArrayList<Event> events;
 
     @Override
@@ -74,7 +74,6 @@ public class CardNoteActivity extends AppCompatActivity implements InteractionLi
                 addFragmentToActivity(getSupportFragmentManager(),
                         cardNoteFragment, R.id.card_note_activity_contentFrame);
             }
-            fragment = cardNoteFragment;
 
             new CardNotePresenter(remoteDataSource, cardNoteFragment, schedulerProvider);
         }
@@ -87,17 +86,17 @@ public class CardNoteActivity extends AppCompatActivity implements InteractionLi
         }
         replaceFragmentToActivity(getSupportFragmentManager(),
                 cardNoteFragment, R.id.card_note_activity_contentFrame);
-        fragment = cardNoteFragment;
+        cardNoteFragment.initList(events);
     }
 
     private void replaceGridFragment() {
 
         if (gridFragment == null) {
-            gridFragment = gridFragment.newInstance();
+            gridFragment = newInstance();
         }
         replaceFragmentToActivity(getSupportFragmentManager(),
                 gridFragment, R.id.card_note_activity_contentFrame);
-        fragment = gridFragment;
+        gridFragment.initList(events);
     }
 
 
@@ -134,15 +133,11 @@ public class CardNoteActivity extends AppCompatActivity implements InteractionLi
     }
 
     public void chooseFragment() {
-        if (fragment == null) {
-            fragment = getSupportFragmentManager().findFragmentById(R.id.card_note_activity_contentFrame);
-        }
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.card_note_activity_contentFrame);
         if (fragment instanceof CardNoteFragment) {
             replaceGridFragment();
-            ((CardNoteGridFragment) fragment).initList(events);
         } else {
             replaceCardNoteFragment();
-            ((CardNoteFragment) fragment).initList(events);
         }
     }
 }

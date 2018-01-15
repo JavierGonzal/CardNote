@@ -2,6 +2,7 @@ package com.javier.cardnote;
 
 import com.javier.cardnote.cardnote.CardNoteContract;
 import com.javier.cardnote.cardnote.CardNotePresenter;
+import com.javier.cardnote.data.Event;
 import com.javier.cardnote.data.Example;
 import com.javier.cardnote.data.RemoteDataSource;
 import com.javier.cardnote.utils.scheduler.BaseSchedulerProvider;
@@ -19,6 +20,8 @@ import java.util.List;
 
 import rx.Observable;
 
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.when;
 
 /**
@@ -60,11 +63,9 @@ public class CardNotePresenterTest {
                 .thenReturn(rx.Observable.just(result));
 
         presenter.fetch();
-
         InOrder inOrder = Mockito.inOrder(view);
         inOrder.verify(view).setLoadingIndicator(true);
-        inOrder.verify(view).setLoadingIndicator(false);
-        inOrder.verify(view).showCardNote(result);
+        inOrder.verify(view).convertToEvent(result);
     }
 
     @Test
@@ -78,5 +79,80 @@ public class CardNotePresenterTest {
         InOrder inOrder = Mockito.inOrder(view);
         inOrder.verify(view).setLoadingIndicator(true);
         inOrder.verify(view).showError();
+    }
+
+    @Test
+    public void convertToEvent(){
+
+        presenter.convertToEvent(result, "noFound");
+
+        InOrder inOrder = Mockito.inOrder(view);
+        inOrder.verify(view).setLoadingIndicator(false);
+        inOrder.verify(view).showCardNote(anyListOf(Event.class));
+        inOrder.verify(view).takeEvent(anyListOf(Event.class));
+    }
+
+    @Test
+    public void convertToEvent_withTitle() {
+        Example exampleOne = new Example("id",null,"date", null, "title", null);
+        List<Example> examples = new ArrayList<>();
+        examples.add(exampleOne);
+        presenter.convertToEvent(result, "noFound");
+
+        InOrder inOrder = Mockito.inOrder(view);
+        inOrder.verify(view).setLoadingIndicator(false);
+        inOrder.verify(view).showCardNote(anyListOf(Event.class));
+        inOrder.verify(view).takeEvent(anyListOf(Event.class));
+    }
+    @Test
+    public void convertToEvent_withTitleAndImage() {
+        Example exampleOne = new Example("id",null,"date", null, "title", "image");
+        List<Example> examples = new ArrayList<>();
+        examples.add(exampleOne);
+        presenter.convertToEvent(result, "noFound");
+
+        InOrder inOrder = Mockito.inOrder(view);
+        inOrder.verify(view).setLoadingIndicator(false);
+        inOrder.verify(view).showCardNote(anyListOf(Event.class));
+        inOrder.verify(view).takeEvent(anyListOf(Event.class));
+    }
+
+    @Test
+    public void convertToEvent_withTitleAndDescription() {
+        Example exampleOne = new Example("id","description","date", null, "title", null);
+        List<Example> examples = new ArrayList<>();
+        examples.add(exampleOne);
+        presenter.convertToEvent(result, "noFound");
+
+        InOrder inOrder = Mockito.inOrder(view);
+        inOrder.verify(view).setLoadingIndicator(false);
+        inOrder.verify(view).showCardNote(anyListOf(Event.class));
+        inOrder.verify(view).takeEvent(anyListOf(Event.class));
+    }
+
+    @Test
+    public void convertToEvent_withImageAndDescription() {
+        Example exampleOne = new Example("id","description","date", null, null, "image");
+        List<Example> examples = new ArrayList<>();
+        examples.add(exampleOne);
+        presenter.convertToEvent(result, "noFound");
+
+        InOrder inOrder = Mockito.inOrder(view);
+        inOrder.verify(view).setLoadingIndicator(false);
+        inOrder.verify(view).showCardNote(anyListOf(Event.class));
+        inOrder.verify(view).takeEvent(anyListOf(Event.class));
+    }
+
+    @Test
+    public void convertToEvent_withNullTitleNullImageAndNullDescription() {
+        Example exampleOne = new Example("id",null,"date", null, null, null);
+        List<Example> examples = new ArrayList<>();
+        examples.add(exampleOne);
+        presenter.convertToEvent(result, "noFound");
+
+        InOrder inOrder = Mockito.inOrder(view);
+        inOrder.verify(view).setLoadingIndicator(false);
+        inOrder.verify(view).showCardNote(anyListOf(Event.class));
+        inOrder.verify(view).takeEvent(anyListOf(Event.class));
     }
 }

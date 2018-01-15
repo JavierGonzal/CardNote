@@ -14,7 +14,7 @@ public class CreateEvents {
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
 
-                Event event = new Event(noFound, noFound, noFound);
+                Event event = new Event(noFound, noFound, "");
 
                 if (list.get(i).getTitle() != null) {
                     event.setTitle(list.get(i).getTitle());
