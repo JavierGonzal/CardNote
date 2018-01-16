@@ -2,6 +2,8 @@ package com.javier.cardnote.detail;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.javier.cardnote.R;
 
@@ -19,7 +21,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.detail_activity);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         initFragment(getIntent().getStringExtra(IMAGE_ITEM));
@@ -34,6 +36,20 @@ public class DetailActivity extends AppCompatActivity {
 
         new DetailPresenter(string, detailFragment);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
 }

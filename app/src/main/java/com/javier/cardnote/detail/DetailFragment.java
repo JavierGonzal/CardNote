@@ -1,12 +1,12 @@
 package com.javier.cardnote.detail;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.graphics.Point;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +48,15 @@ public class DetailFragment extends Fragment implements DetailContract.View, Vie
     @BindView(R.id.detail_relativeLayout)
     ViewGroup root;
 
+    private int lastX = 0;
+    private int onlyOne = 0;
+    private int minX = 0;
+    private int maxX = 0;
+    private int firstDivision=0;
+    private int secondDivision=0;
+    private int thirdDivision=0;
+    private int fourthDivision=0;
+
     public static DetailFragment newInstance() {
         return new DetailFragment();
     }
@@ -69,11 +78,26 @@ public class DetailFragment extends Fragment implements DetailContract.View, Vie
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setCornerRadius(0.0f);
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
-        parent.setBackground(gradientDrawable);
+
+        getDimension();
         imageButton.setOnTouchListener(this);
 
 
         return view;
+    }
+
+    private void getDimension() {
+        parent.setBackground(gradientDrawable);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageButton.getLayoutParams();
+        minX = layoutParams.leftMargin;
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        maxX = size.x;
+        firstDivision= (maxX)/5;
+        secondDivision= (maxX*2)/5;
+        thirdDivision= (maxX*3)/5;
+        fourthDivision= (maxX*4)/5;
     }
 
     @Override
@@ -92,7 +116,9 @@ public class DetailFragment extends Fragment implements DetailContract.View, Vie
                 break;
             case MotionEvent.ACTION_MOVE:
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageButton.getLayoutParams();
-                layoutParams.leftMargin = x - xDelta;
+                if ((minX < x - xDelta) && (maxX - 170 > x)) {
+                    layoutParams.leftMargin = x - xDelta;
+                }
                 imageButton.setLayoutParams(layoutParams);
                 break;
         }
@@ -101,14 +127,38 @@ public class DetailFragment extends Fragment implements DetailContract.View, Vie
     }
 
     void changeAnimation(int x) {
-
-        if (x > 200) {
-            makeCircle();
-        } else if (150 < x && x < 200) {
-            makeCorner();
-        //} else if (150 > xDelta) {
-          //  makeSquare();
+        if (lastX < x) {
+            if (x > fourthDivision && onlyOne != 1) {
+                makeShape(130.0f, 200.0f);
+                onlyOne = 1;
+            } else if ((thirdDivision < x && x < fourthDivision) && (onlyOne != 2)) {
+                makeShape(80.0f, 130.0f);
+                onlyOne = 2;
+            } else if ((secondDivision < x && x < thirdDivision) && (onlyOne != 3)) {
+                makeShape(30.0f, 80.0f);
+                onlyOne = 3;
+            } else if ((firstDivision < x && x < secondDivision) && (onlyOne != 4)) {
+                makeShape(0.0f, 30.0f);
+                onlyOne = 4;
+            }
+        } else {
+            if ((thirdDivision < x && x < fourthDivision) && (onlyOne != 5)) {
+                makeShape(200.0f, 130.0f);
+                onlyOne = 5;
+            } else if ((secondDivision < x && x < thirdDivision) && (onlyOne != 6)) {
+                makeShape(130.0f, 80.0f);
+                onlyOne = 6;
+            } else if ((firstDivision < x && x < secondDivision) && (onlyOne != 7)) {
+                makeShape(80.0f, 30.0f);
+                onlyOne = 7;
+            } else if ((firstDivision > x) && (onlyOne != 8)) {
+                makeShape(30.0f, 0.0f);
+                onlyOne = 8;
+            }
         }
+
+        lastX = x;
+
     }
 
     @Override
@@ -121,28 +171,9 @@ public class DetailFragment extends Fragment implements DetailContract.View, Vie
         Glide.with(this).load(string).into(imageView);
     }
 
-    private void makeCircle() {
+    private void makeShape(float oldX, float newX) {
         ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 30f, 200.0f);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(500);
-        animatorSet.play(cornerAnimation);
-        animatorSet.start();
-    }
-    private void makeSquare() {
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 0f, 0f);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(500);
-        animatorSet.play(cornerAnimation);
-        animatorSet.start();
-    }
-
-    private void makeCorner() {
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 200.0f, 30f);
+                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", oldX, newX);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(500);

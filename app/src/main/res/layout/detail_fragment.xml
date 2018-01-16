@@ -13,7 +13,6 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,29 +28,15 @@
             android:src="@drawable/circle" />
 
     </com.javier.cardnote.utils.AnimatableCardView>
-    <!--
-        <HorizontalScrollView
-            android:id="@+id/detail_scrollView"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:scrollbarThumbHorizontal="@drawable/circle"
-            android:scrollbarTrackHorizontal="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent">
-
-        </HorizontalScrollView>-->
 
     <RelativeLayout
         android:id="@+id/detail_relativeLayout"
         android:layout_width="0dp"
         android:layout_height="70dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:background="@drawable/rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -60,7 +45,6 @@
             android:id="@+id/detail_imageButton"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginBottom="8dp"
             android:background="@drawable/circle" />
     </RelativeLayout>
 
